@@ -3,43 +3,53 @@ const { User } = require('../models/user.model')
 const getUserByAccount = async (req, res) => {
   const {
     number
-  } = req.params
+  } = req.query
 
-  const cacheResult = await redisClient.get('accountNumber:'+number)
-  let result = JSON.parse(cacheResult)
-  if (!cacheResult) {
-    const searchResult = await User.findOne({
-      accountNumber: number
-    })
-    result = searchResult
-    if(searchResult) await redisClient.set('accountNumber:'+number, JSON.stringify(searchResult))
+  try {
+    if (!number) throw ({ error: 'Query number is required' })
+    const cacheResult = await redisClient.get('accountNumber:'+number)
+    let result = JSON.parse(cacheResult)
+    if (!cacheResult) {
+      const searchResult = await User.findOne({
+        accountNumber: number
+      })
+      result = searchResult
+      if(searchResult) await redisClient.set('accountNumber:'+number, JSON.stringify(searchResult))
+    }
+  
+    res.send({
+      msg: "Success",
+      data: result
+    })  
+  } catch (err) {
+    res.send(err)
   }
-
-  res.send({
-    msg: "Success",
-    data: result
-  })
 }
 
 const getUserByIdentity = async (req, res) => {
   const {
     number
-  } = req.params
+  } = req.query
 
-  const cacheResult = await redisClient.get('identityNumber:'+number)
-  let result = JSON.parse(cacheResult)
-  if (!cacheResult) {
-    const searchResult = await User.findOne({
-      identityNumber: number
+  try {
+    if (!number) throw ({ error: 'Query number is required' })
+    const cacheResult = await redisClient.get('identityNumber:'+number)
+    let result = JSON.parse(cacheResult)
+    if (!cacheResult) {
+      const searchResult = await User.findOne({
+        identityNumber: number
+      })
+      result = searchResult
+      if(searchResult) await redisClient.set('identityNumber:'+number, JSON.stringify(searchResult))
+    }
+    
+    res.send({
+      msg: "Success",
+      data: result
     })
-    result = searchResult
-    if(searchResult) await redisClient.set('identityNumber:'+number, JSON.stringify(searchResult))
+  } catch (err) {
+    res.send(err)
   }
-  
-  res.send({
-    msg: "Success",
-    data: result
-  })
 }
 
 const createUser = async (req, res) => {
