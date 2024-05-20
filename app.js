@@ -40,10 +40,6 @@ app.use('/', (req, res) => {
 mongoConnect(MONGO_URL, MONGO_DBNAME)
 void redisConnect(REDIS_URL)
 
-if (NODENV !== 'Testing') {
-  app.listen(PORT || 3000, '0.0.0.0', () => {
-    console.log('Connected to PORT:', PORT)
-  })  
-}
-
-module.exports = app
+app.listen(PORT || 3000, '0.0.0.0', () => {
+  console.log('Connected to PORT:', PORT)
+})  
